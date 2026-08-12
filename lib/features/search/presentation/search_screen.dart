@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/widgets/basil_icon.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -10,7 +11,7 @@ class SearchScreen extends StatelessWidget {
       children: [
         Text('Find your next meal', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 18),
-        const TextField(autofocus: false, decoration: InputDecoration(prefixIcon: Icon(Icons.search_rounded), hintText: 'Jollof, shawarma, restaurant…')),
+        const TextField(autofocus: false, decoration: InputDecoration(prefixIcon: BasilIcon('search-outline'), hintText: 'Jollof, shawarma, restaurant…')),
         const SizedBox(height: 28),
         Text('Popular searches', style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 12),

@@ -13,7 +13,10 @@ dependencies:
   flutter_dotenv: ^6.0.0
   http: ^1.6.0
   intl: ^0.20.2
+  flutter_svg: ^2.2.0
+  lottie: ^3.3.1
   provider: ^6.1.5+1
+  rive: ^0.13.20
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +28,9 @@ flutter:
   assets:
     - .env
     - assets/images/ndichow-app-icon.png
+    - assets/icons/basil/
+    - assets/animations/
+    - assets/animations/lottie/
   fonts:
     - family: PPNeueMachina
       fonts:

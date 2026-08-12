@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/app_animation.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -13,7 +14,13 @@ class OrdersScreen extends StatelessWidget {
         children: [
           Text('Your orders', style: Theme.of(context).textTheme.headlineMedium),
           const Spacer(),
-          const Center(child: Icon(Icons.receipt_long_rounded, size: 72, color: AppColors.primary)),
+          const Center(
+            child: AppAnimation(
+              AppAnimationType.done,
+              size: 150,
+              semanticLabel: 'No orders yet',
+            ),
+          ),
           const SizedBox(height: 16),
           Center(child: Text('No orders yet', style: Theme.of(context).textTheme.titleLarge)),
           const SizedBox(height: 8),

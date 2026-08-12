@@ -3,6 +3,9 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../shared/models/restaurant.dart';
 import '../../../shared/widgets/restaurant_card.dart';
+import '../../../shared/widgets/app_animation.dart';
+import '../../../shared/widgets/app_progress_animation.dart';
+import '../../../shared/widgets/basil_icon.dart';
 import '../data/home_repository.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const CircleAvatar(
                         backgroundColor: AppColors.primaryContainer,
-                        child: Icon(Icons.location_on_rounded, color: AppColors.primary),
+                        child: BasilIcon(
+                          'location-solid',
+                          color: AppColors.primary,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -53,7 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none_rounded)),
+                      IconButton(
+                        tooltip: 'Notifications',
+                        onPressed: () {},
+                        icon: const BasilIcon('notification-outline'),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -63,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     readOnly: true,
                     decoration: const InputDecoration(
                       hintText: 'Search dishes and restaurants',
-                      prefixIcon: Icon(Icons.search_rounded),
+                      prefixIcon: BasilIcon('search-outline'),
                     ),
                     onTap: () {},
                   ),
@@ -106,16 +116,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (snapshot.connectionState != ConnectionState.done) {
                   return const SliverFillRemaining(
                     hasScrollBody: false,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: AppProgressAnimation()),
                   );
                 }
                 if (snapshot.hasError) {
                   return SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(
-                      child: FilledButton(
-                        onPressed: () => setState(() => _restaurants = widget.repository.getNearbyRestaurants()),
-                        child: const Text('Try again'),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const AppAnimation(
+                            AppAnimationType.failure,
+                            size: 128,
+                          ),
+                          const SizedBox(height: 12),
+                          FilledButton(
+                            onPressed: () => setState(
+                              () => _restaurants =
+                                  widget.repository.getNearbyRestaurants(),
+                            ),
+                            child: const Text('Try again'),
+                          ),
+                        ],
                       ),
                     ),
                   );

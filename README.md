@@ -10,6 +10,7 @@ The project is in its foundation stage. The current build includes:
 
 - A branded Material 3 design system
 - Original NdiChow launcher artwork for Android and iOS
+- Offline Basil SVG icons and reusable Rive/Lottie animation components
 - A responsive four-tab application shell
 - Food discovery home screen
 - Restaurant summary models and repository abstraction
@@ -52,6 +53,8 @@ NdiChow uses a friendly, high-contrast visual language:
 | Text | `#111827` | Primary content |
 
 PP Neue Machina is bundled for distinctive headings and labels. Cards use generous radii, white surfaces, restrained shadows, and a floating pill-shaped bottom navigation.
+
+Interface icons use the bundled Basil set by Craftwork under CC BY 4.0. The required attribution is also visible in the app's Profile screen.
 
 Design tokens are defined in [`lib/core/theme`](lib/core/theme).
 

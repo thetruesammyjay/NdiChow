@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_dimensions.dart';
 import '../models/restaurant.dart';
+import 'basil_icon.dart';
 
 class RestaurantCard extends StatelessWidget {
   const RestaurantCard({super.key, required this.restaurant, this.onTap});
@@ -46,7 +47,11 @@ class RestaurantCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
-                      const Icon(Icons.star_rounded, color: AppColors.warning, size: 20),
+                      const BasilIcon(
+                        'star-solid',
+                        color: AppColors.warning,
+                        size: 20,
+                      ),
                       Text(' ${restaurant.rating}'),
                     ],
                   ),
@@ -58,10 +63,10 @@ class RestaurantCard extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Icon(Icons.schedule_rounded, size: 18),
+                      const BasilIcon('clock-outline', size: 18),
                       Text(' ${restaurant.deliveryMinutes} min'),
                       const SizedBox(width: 16),
-                      const Icon(Icons.delivery_dining_rounded, size: 18),
+                      const BasilIcon('shopping-bag-outline', size: 18),
                       Text(' ${currency.format(restaurant.deliveryFee)}'),
                     ],
                   ),

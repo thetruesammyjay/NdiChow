@@ -4,6 +4,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/orders/presentation/orders_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/search/presentation/search_screen.dart';
+import '../../shared/widgets/basil_icon.dart';
 import '../theme/app_colors.dart';
 
 class AppShell extends StatefulWidget {
@@ -39,10 +40,10 @@ class _BottomNavigation extends StatelessWidget {
   final ValueChanged<int> onSelected;
 
   static const items = [
-    (Icons.home_outlined, Icons.home_rounded, 'Home'),
-    (Icons.search_outlined, Icons.search_rounded, 'Search'),
-    (Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Orders'),
-    (Icons.person_outline_rounded, Icons.person_rounded, 'Profile'),
+    ('home-outline', 'home-solid', 'Home'),
+    ('search-outline', 'search-solid', 'Search'),
+    ('shopping-bag-outline', 'shopping-bag-solid', 'Orders'),
+    ('user-outline', 'user-solid', 'Profile'),
   ];
 
   @override
@@ -68,7 +69,13 @@ class _BottomNavigation extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(selected ? item.$2 : item.$1, color: selected ? AppColors.primary : AppColors.textSecondary),
+                  BasilIcon(
+                    selected ? item.$2 : item.$1,
+                    size: 24,
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                  ),
                   const SizedBox(height: 3),
                   Text(item.$3, style: TextStyle(fontSize: 11, color: selected ? AppColors.primary : AppColors.textSecondary, fontWeight: selected ? FontWeight.w800 : FontWeight.w400)),
                 ],
