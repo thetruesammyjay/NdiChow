@@ -53,6 +53,7 @@ app.*.map.json
 .env.test.local
 .env.production
 .env.production.local
+dart_defines.json
 
 # Node (publishing tooling and any bundled JS deps)
 node_modules/

@@ -16,6 +16,15 @@ if (localPropertiesFile.exists()) {
 
 val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toIntOrNull() ?: 1
 val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
+val releaseSigningKeys = listOf(
+    "MYAPP_UPLOAD_KEY_ALIAS",
+    "MYAPP_UPLOAD_KEY_PASSWORD",
+    "MYAPP_UPLOAD_STORE_FILE",
+    "MYAPP_UPLOAD_STORE_PASSWORD",
+)
+val hasReleaseSigning = releaseSigningKeys.all {
+    !localProperties.getProperty(it).isNullOrBlank()
+}
 
 android {
     namespace = "com.thetruesammyjay.ndichow"
@@ -31,12 +40,14 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-        signingConfigs {
-        create("release") {
-            keyAlias = localProperties.getProperty("MYAPP_UPLOAD_KEY_ALIAS") ?: "upload"
-            keyPassword = localProperties.getProperty("MYAPP_UPLOAD_KEY_PASSWORD") ?: ""
-            storeFile = file(localProperties.getProperty("MYAPP_UPLOAD_STORE_FILE") ?: "upload-keystore.jks")
-            storePassword = localProperties.getProperty("MYAPP_UPLOAD_STORE_PASSWORD") ?: ""
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                keyAlias = localProperties.getProperty("MYAPP_UPLOAD_KEY_ALIAS")
+                keyPassword = localProperties.getProperty("MYAPP_UPLOAD_KEY_PASSWORD")
+                storeFile = file(localProperties.getProperty("MYAPP_UPLOAD_STORE_FILE"))
+                storePassword = localProperties.getProperty("MYAPP_UPLOAD_STORE_PASSWORD")
+            }
         }
     }
 
@@ -50,9 +61,11 @@ android {
         versionName = flutter.versionName
     }
 
-     buildTypes {
+    buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isShrinkResources = true
             isMinifyEnabled = true
         }

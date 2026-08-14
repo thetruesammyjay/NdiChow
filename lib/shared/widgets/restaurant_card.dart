@@ -57,14 +57,16 @@ class RestaurantCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    restaurant.cuisine,
+                    restaurant.cuisines.join(' • '),
                     style: const TextStyle(color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       const BasilIcon('clock-outline', size: 18),
-                      Text(' ${restaurant.deliveryMinutes} min'),
+                      Text(
+                        ' ${restaurant.minimumDeliveryMinutes}-${restaurant.maximumDeliveryMinutes} min',
+                      ),
                       const SizedBox(width: 16),
                       const BasilIcon('shopping-bag-outline', size: 18),
                       Text(' ${currency.format(restaurant.deliveryFee)}'),

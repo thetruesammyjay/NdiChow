@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../config/app_config.dart';
+import '../networking/ndichow_api_client.dart';
 import '../../features/home/data/home_repository.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/orders/presentation/orders_screen.dart';
@@ -8,7 +10,9 @@ import '../../shared/widgets/basil_icon.dart';
 import '../theme/app_colors.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  const AppShell({super.key, this.homeRepository});
+
+  final HomeRepository? homeRepository;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -16,19 +20,34 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
+  late final HomeRepository _homeRepository = widget.homeRepository ??
+      HttpHomeRepository(NdiChowApiClient(baseUrl: AppConfig.apiBaseUrl));
   late final List<Widget> _screens = [
-    HomeScreen(repository: MockHomeRepository()),
-    const SearchScreen(),
+    HomeScreen(
+      repository: _homeRepository,
+      onSearchTap: () => _selectDestination(1),
+    ),
+    SearchScreen(repository: _homeRepository),
     const OrdersScreen(),
     const ProfileScreen(),
   ];
+
+  void _selectDestination(int value) {
+    if (_selectedIndex != value) setState(() => _selectedIndex = value);
+  }
+
+  @override
+  void dispose() {
+    _homeRepository.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Stack(
       children: [
         Positioned.fill(child: IndexedStack(index: _selectedIndex, children: _screens)),
-        Positioned(left: 12, right: 12, bottom: 14, child: SafeArea(top: false, child: _BottomNavigation(selectedIndex: _selectedIndex, onSelected: (value) => setState(() => _selectedIndex = value)))),
+        Positioned(left: 12, right: 12, bottom: 14, child: SafeArea(top: false, child: _BottomNavigation(selectedIndex: _selectedIndex, onSelected: _selectDestination))),
       ],
     ),
   );

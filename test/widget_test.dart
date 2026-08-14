@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ndichow/main.dart';
+import 'package:ndichow/features/home/data/home_repository.dart';
 
 void main() {
   testWidgets('renders the main food discovery shell', (tester) async {
-    await tester.pumpWidget(const NdiChowApp());
+    await tester.pumpWidget(NdiChowApp(homeRepository: MockHomeRepository()));
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('What are you\nchowing today?'), findsOneWidget);
@@ -14,7 +15,7 @@ void main() {
   });
 
   testWidgets('switches between the main destinations', (tester) async {
-    await tester.pumpWidget(const NdiChowApp());
+    await tester.pumpWidget(NdiChowApp(homeRepository: MockHomeRepository()));
     await tester.pump(const Duration(milliseconds: 300));
 
     await tester.tap(find.text('Orders'));

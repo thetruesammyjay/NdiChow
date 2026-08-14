@@ -9,9 +9,14 @@ import '../../../shared/widgets/basil_icon.dart';
 import '../data/home_repository.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.repository});
+  const HomeScreen({
+    super.key,
+    required this.repository,
+    required this.onSearchTap,
+  });
 
   final HomeRepository repository;
+  final VoidCallback onSearchTap;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -75,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       hintText: 'Search dishes and restaurants',
                       prefixIcon: BasilIcon('search-outline'),
                     ),
-                    onTap: () {},
+                    onTap: widget.onSearchTap,
                   ),
                   const SizedBox(height: 20),
                   Container(
