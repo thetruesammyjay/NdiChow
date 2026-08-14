@@ -9,16 +9,16 @@ class AppProgressAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: 'Loading',
-        child: ExcludeSemantics(
-          child: SizedBox(
-            height: height,
-            width: double.infinity,
-            child: const RiveAnimation.asset(
-              'assets/animations/login_progress_bar.riv',
-              fit: BoxFit.contain,
-            ),
-          ),
+    label: 'Loading',
+    child: ExcludeSemantics(
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: const RiveAnimation.asset(
+          'assets/animations/login_progress_bar.riv',
+          fit: BoxFit.contain,
         ),
-      );
+      ),
+    ),
+  );
 }

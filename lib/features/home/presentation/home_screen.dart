@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../shared/models/restaurant.dart';
@@ -13,10 +14,12 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.repository,
     required this.onSearchTap,
+    this.loadingBuilder,
   });
 
   final HomeRepository repository;
   final VoidCallback onSearchTap;
+  final WidgetBuilder? loadingBuilder;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -36,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          setState(() => _restaurants = widget.repository.getNearbyRestaurants());
+          setState(
+            () => _restaurants = widget.repository.getNearbyRestaurants(),
+          );
           await _restaurants;
         },
         child: CustomScrollView(
@@ -59,8 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Deliver to', style: Theme.of(context).textTheme.bodySmall),
-                            const Text('Home • Lagos', style: TextStyle(fontWeight: FontWeight.w800)),
+                            Text(
+                              'Deliver to',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            const Text(
+                              'Home • Lagos',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
                           ],
                         ),
                       ),
@@ -72,7 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Text('What are you\nchowing today?', style: Theme.of(context).textTheme.headlineLarge),
+                  Text(
+                    'What are you\nchowing today?',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
                   const SizedBox(height: 18),
                   TextField(
                     readOnly: true,
@@ -87,7 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       gradient: AppColors.primaryGradient,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusLarge),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusLarge,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -95,9 +111,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Your first bite is on us', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white)),
+                              Text(
+                                'Your first bite is on us',
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(color: Colors.white),
+                              ),
                               const SizedBox(height: 8),
-                              const Text('Get 20% off your first NdiChow order.', style: TextStyle(color: Colors.white)),
+                              const Text(
+                                'Get 20% off your first NdiChow order.',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ],
                           ),
                         ),
@@ -106,11 +129,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text('Browse cuisines', style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    'Browse cuisines',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: 12),
                   const _CuisineRow(),
                   const SizedBox(height: 26),
-                  Text('Popular near you', style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    'Popular near you',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: 12),
                 ],
               ),
@@ -119,9 +148,13 @@ class _HomeScreenState extends State<HomeScreen> {
               future: _restaurants,
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
-                  return const SliverFillRemaining(
+                  return SliverFillRemaining(
                     hasScrollBody: false,
-                    child: Center(child: AppProgressAnimation()),
+                    child: Center(
+                      child:
+                          widget.loadingBuilder?.call(context) ??
+                          const AppProgressAnimation(),
+                    ),
                   );
                 }
                 if (snapshot.hasError) {
@@ -137,10 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(height: 12),
                           FilledButton(
-                            onPressed: () => setState(
-                              () => _restaurants =
-                                  widget.repository.getNearbyRestaurants(),
-                            ),
+                            onPressed:
+                                () => setState(
+                                  () =>
+                                      _restaurants =
+                                          widget.repository
+                                              .getNearbyRestaurants(),
+                                ),
                             child: const Text('Try again'),
                           ),
                         ],
@@ -152,7 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
                   sliver: SliverList.builder(
                     itemCount: snapshot.data!.length,
-                    itemBuilder: (_, index) => RestaurantCard(restaurant: snapshot.data![index]),
+                    itemBuilder:
+                        (_, index) =>
+                            RestaurantCard(restaurant: snapshot.data![index]),
                   ),
                 );
               },
@@ -169,7 +207,12 @@ class _CuisineRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const cuisines = [('🍚', 'Rice'), ('🍗', 'Chicken'), ('🍔', 'Fast food'), ('🥣', 'Soups')];
+    const cuisines = [
+      ('🍚', 'Rice'),
+      ('🍗', 'Chicken'),
+      ('🍔', 'Fast food'),
+      ('🥣', 'Soups'),
+    ];
     return SizedBox(
       height: 84,
       child: ListView.separated(
@@ -181,8 +224,17 @@ class _CuisineRow extends StatelessWidget {
           return Container(
             width: 76,
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-            child: Column(children: [Text(item.$1, style: const TextStyle(fontSize: 28)), const Spacer(), Text(item.$2, overflow: TextOverflow.ellipsis)]),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              children: [
+                Text(item.$1, style: const TextStyle(fontSize: 28)),
+                const Spacer(),
+                Text(item.$2, overflow: TextOverflow.ellipsis),
+              ],
+            ),
           );
         },
       ),

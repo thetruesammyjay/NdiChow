@@ -1,21 +1,24 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../../shared/models/restaurant.dart';
 
 class NdiChowApiClient {
   NdiChowApiClient({required this.baseUrl, http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final String baseUrl;
   final http.Client _client;
 
   Future<List<Restaurant>> getRestaurants({String? query}) async {
     final uri = Uri.parse('$baseUrl/restaurants').replace(
-      queryParameters: query == null || query.trim().isEmpty
-          ? null
-          : {'q': query.trim()},
+      queryParameters:
+          query == null || query.trim().isEmpty ? null : {'q': query.trim()},
     );
-    final response = await _client.get(uri).timeout(const Duration(seconds: 12));
+    final response = await _client
+        .get(uri)
+        .timeout(const Duration(seconds: 12));
     final body = _decode(response);
     final data = body['data'];
     if (data is! List<dynamic>) {
@@ -47,9 +50,8 @@ class NdiChowApiClient {
     }
     final error = decoded['error'];
     if (response.statusCode >= 400 || error is Map<String, dynamic>) {
-      final errorMap = error is Map<String, dynamic>
-          ? error
-          : const <String, dynamic>{};
+      final errorMap =
+          error is Map<String, dynamic> ? error : const <String, dynamic>{};
       throw NdiChowApiException(
         errorMap['code'] as String? ?? 'HTTP_${response.statusCode}',
         errorMap['message'] as String? ?? 'The request could not be completed.',

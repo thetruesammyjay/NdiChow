@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 import 'app_dimensions.dart';
 
@@ -64,7 +65,10 @@ abstract final class AppTheme {
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }

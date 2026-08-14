@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_dimensions.dart';
 import '../models/restaurant.dart';
@@ -27,11 +28,12 @@ class RestaurantCard extends StatelessWidget {
               child: Image.network(
                 restaurant.imageUrl,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  color: AppColors.primaryContainer,
-                  alignment: Alignment.center,
-                  child: const Text('🍲', style: TextStyle(fontSize: 52)),
-                ),
+                errorBuilder:
+                    (_, __, ___) => Container(
+                      color: AppColors.primaryContainer,
+                      alignment: Alignment.center,
+                      child: const Text('🍲', style: TextStyle(fontSize: 52)),
+                    ),
               ),
             ),
             Padding(

@@ -34,7 +34,8 @@ class MockHomeRepository implements HomeRepository {
         minimumDeliveryMinutes: 20,
         maximumDeliveryMinutes: 30,
         deliveryFee: 900,
-        imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=900',
+        imageUrl:
+            'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=900',
         isOpen: true,
       ),
       Restaurant(
@@ -45,7 +46,8 @@ class MockHomeRepository implements HomeRepository {
         minimumDeliveryMinutes: 30,
         maximumDeliveryMinutes: 40,
         deliveryFee: 700,
-        imageUrl: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=900',
+        imageUrl:
+            'https://images.unsplash.com/photo-1547592180-85f173990554?w=900',
         isOpen: true,
       ),
       Restaurant(
@@ -56,7 +58,8 @@ class MockHomeRepository implements HomeRepository {
         minimumDeliveryMinutes: 15,
         maximumDeliveryMinutes: 25,
         deliveryFee: 500,
-        imageUrl: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900',
+        imageUrl:
+            'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900',
         isOpen: true,
       ),
     ];

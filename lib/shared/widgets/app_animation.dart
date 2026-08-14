@@ -46,10 +46,10 @@ class AppAnimation extends StatelessWidget {
   }
 
   String _defaultLabel(AppAnimationType value) => switch (value) {
-        AppAnimationType.loading => 'Loading',
-        AppAnimationType.success => 'Success',
-        AppAnimationType.failure => 'Something went wrong',
-        AppAnimationType.done => 'Complete',
-        AppAnimationType.welcome => 'Welcome',
-      };
+    AppAnimationType.loading => 'Loading',
+    AppAnimationType.success => 'Success',
+    AppAnimationType.failure => 'Something went wrong',
+    AppAnimationType.done => 'Complete',
+    AppAnimationType.welcome => 'Welcome',
+  };
 }

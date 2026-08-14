@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/basil_icon.dart';
 
@@ -17,7 +18,12 @@ class ProfileScreen extends StatelessWidget {
           child: BasilIcon('user-solid', size: 44),
         ),
         const SizedBox(height: 12),
-        Center(child: Text('Welcome to NdiChow', style: Theme.of(context).textTheme.titleLarge)),
+        Center(
+          child: Text(
+            'Welcome to NdiChow',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
         const SizedBox(height: 28),
         const _ProfileTile(icon: 'location-outline', title: 'Saved addresses'),
         const _ProfileTile(icon: 'card-outline', title: 'Payment methods'),
@@ -28,10 +34,7 @@ class ProfileScreen extends StatelessWidget {
         const Text(
           'Basil icons by Craftwork • CC BY 4.0',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 11,
-          ),
+          style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
         ),
       ],
     ),

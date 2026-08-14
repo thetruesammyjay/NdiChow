@@ -30,9 +30,10 @@ class BasilIcon extends StatelessWidget {
       width: resolvedSize,
       height: resolvedSize,
       semanticsLabel: semanticLabel,
-      colorFilter: resolvedColor == null
-          ? null
-          : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
+      colorFilter:
+          resolvedColor == null
+              ? null
+              : ColorFilter.mode(resolvedColor, BlendMode.srcIn),
     );
   }
 }
