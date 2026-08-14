@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/NdiChow.png" alt="NdiChow" width="680" />
+</p>
+
 # NdiChow Mobile
 
 NdiChow is the Flutter customer app for discovering restaurants and ordering food. It keeps the existing bright coral design language, custom PP Neue Machina typography, offline Basil icons, and Lottie/Rive animation support while connecting discovery to the NdiChow API.
