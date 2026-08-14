@@ -9,13 +9,18 @@ The TypeScript API is maintained separately in [NdiChow-backend](https://github.
 - Material 3 theme and responsive four-tab shell
 - Home discovery with loading, error, and pull-to-refresh states
 - Live restaurant listing and search through the backend
-- Typed restaurant JSON mapping
-- Home, Search, Orders, and Profile foundations
+- Email/password registration, sign-in, session restoration, and logout
+- Opaque bearer tokens stored with platform secure storage
+- Restaurant details with categorized, availability-aware menus
+- One-restaurant cart with quantities, notes, minimum-order checks, and estimated totals
+- Address checkout with retry-safe idempotency keys and server-confirmed totals
+- Live order history, detail, pull-to-refresh, and status timeline
+- Typed customer, restaurant, menu, cart, and order models
 - Bundled SVG icons and animation assets
 - Debug-only local HTTP access; HTTPS enforced for release API configuration
 - CI formatting, analysis, and widget tests
 
-Restaurant details, cart, authentication screens, secure session storage, checkout, payments, and live order tracking are the next product layers.
+Payments, saved addresses, delivery-zone eligibility, push notifications, and realtime tracking require the next backend phase.
 
 ## Requirements
 
@@ -77,9 +82,11 @@ lib/
 |   `-- theme/        Colors, typography, and component themes
 |-- features/
 |   |-- cart/
+|   |-- auth/         Secure sessions and account presentation
 |   |-- home/         Repository and discovery presentation
 |   |-- orders/
 |   |-- profile/
+|   |-- restaurants/ Restaurant detail and categorized menu
 |   `-- search/
 |-- shared/
 |   |-- models/       Typed cross-feature models
@@ -91,17 +98,24 @@ Screens receive repositories instead of making HTTP calls directly. `HttpHomeRep
 
 ## API contract
 
-Discovery currently uses:
+The customer ordering flow currently uses:
 
 ```http
 GET /api/v1/restaurants?page=1&limit=20
 GET /api/v1/restaurants?q=jollof
 GET /api/v1/restaurants/:restaurantId
+POST /api/v1/auth/register
+POST /api/v1/auth/login
+GET /api/v1/auth/me
+POST /api/v1/auth/logout
+GET /api/v1/orders
+GET /api/v1/orders/:orderId
+POST /api/v1/orders
 ```
 
 Success responses use `{ "data": ... }`; failures use `{ "error": { "code": "...", "message": "..." } }`. The app maps backend error codes to safe user-facing states.
 
-Authenticated endpoints use `Authorization: Bearer <session-token>`. When checkout is implemented, the app must submit only menu item IDs, quantities, notes, an address, and a unique `Idempotency-Key`. Prices and delivery fees are always calculated by the server.
+Authenticated endpoints use `Authorization: Bearer <session-token>`. Checkout submits only menu item IDs, quantities, notes, an address, and a unique `Idempotency-Key`. Prices and delivery fees are always calculated by the server. A retry reuses its key only while the cart and address payload remain identical.
 
 ## Common commands
 
@@ -129,11 +143,12 @@ MYAPP_UPLOAD_KEY_PASSWORD=replace-me
 
 ## Testing and CI
 
-GitHub Actions runs dependency resolution, formatting checks, static analysis, and widget tests on pushes to `main` and pull requests. Add unit tests for parsing and controllers, widget tests for every UI state, and integration tests for authentication and checkout as those features land.
+GitHub Actions runs dependency resolution, formatting checks, static analysis, and tests on pushes to `main` and pull requests. The suite covers the application shell, navigation, cart invariants, restaurant parsing, bearer authorization, idempotency headers, and the rule that checkout never sends client-controlled prices.
 
 ## Security rules
 
-- Store session tokens with a platform secure-storage package when authentication UI is added.
+- Session tokens are stored with `flutter_secure_storage` and cleared after logout or a `401` response.
+- Android application backups are disabled so encrypted session state cannot be restored without its key material.
 - Treat every value embedded in the app as public.
 - Never calculate authoritative order totals on the device.
 - Require HTTPS in staging and production.
@@ -145,12 +160,13 @@ GitHub Actions runs dependency resolution, formatting checks, static analysis, a
 - [x] Branded Flutter foundation and asset integration
 - [x] HTTP restaurant discovery and search
 - [x] Debug/release network policy separation
-- [ ] Restaurant detail and categorized menu
-- [ ] Sign-up, sign-in, logout, and secure session persistence
+- [x] Restaurant detail and categorized menu
+- [x] Sign-up, sign-in, logout, and secure session persistence
 - [ ] Address management and delivery eligibility
-- [ ] Cart, customization, and idempotent checkout
+- [x] Cart, notes, quantities, and idempotent checkout
 - [ ] Payment provider integration
-- [ ] Active order timeline and notifications
+- [x] Order history, detail, and status timeline
+- [ ] Push notifications and realtime order updates
 - [ ] Accessibility, localization, and store-release audit
 
 ## License

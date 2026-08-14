@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../config/app_config.dart';
-import '../networking/ndichow_api_client.dart';
+import '../../features/cart/application/cart_controller.dart';
+import '../../features/cart/presentation/cart_screen.dart';
 import '../../features/home/data/home_repository.dart';
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/orders/data/order_repository.dart';
 import '../../features/orders/presentation/orders_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/restaurants/presentation/restaurant_detail_screen.dart';
 import '../../features/search/presentation/search_screen.dart';
 import '../../shared/widgets/basil_icon.dart';
 import '../theme/app_colors.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key, this.homeRepository, this.loadingBuilder});
+  const AppShell({
+    super.key,
+    required this.homeRepository,
+    required this.orderRepository,
+    this.loadingBuilder,
+  });
 
-  final HomeRepository? homeRepository;
+  final HomeRepository homeRepository;
+  final OrderRepository orderRepository;
   final WidgetBuilder? loadingBuilder;
 
   @override
@@ -22,28 +31,47 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
-  late final HomeRepository _homeRepository =
-      widget.homeRepository ??
-      HttpHomeRepository(NdiChowApiClient(baseUrl: AppConfig.apiBaseUrl));
+  final _ordersKey = GlobalKey<OrdersScreenState>();
+
   late final List<Widget> _screens = [
     HomeScreen(
-      repository: _homeRepository,
+      repository: widget.homeRepository,
       onSearchTap: () => _selectDestination(1),
+      onRestaurantTap: _openRestaurant,
       loadingBuilder: widget.loadingBuilder,
     ),
-    SearchScreen(repository: _homeRepository),
-    const OrdersScreen(),
+    SearchScreen(
+      repository: widget.homeRepository,
+      onRestaurantTap: _openRestaurant,
+    ),
+    OrdersScreen(key: _ordersKey, repository: widget.orderRepository),
     const ProfileScreen(),
   ];
 
   void _selectDestination(int value) {
+    if (value == 2) _ordersKey.currentState?.refresh();
     if (_selectedIndex != value) setState(() => _selectedIndex = value);
   }
 
-  @override
-  void dispose() {
-    _homeRepository.dispose();
-    super.dispose();
+  void _openRestaurant(String restaurantId) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder:
+            (_) => RestaurantDetailScreen(
+              restaurantId: restaurantId,
+              repository: widget.homeRepository,
+              orderRepository: widget.orderRepository,
+            ),
+      ),
+    );
+  }
+
+  void _openCart() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => CartScreen(repository: widget.orderRepository),
+      ),
+    );
   }
 
   @override
@@ -52,6 +80,27 @@ class _AppShellState extends State<AppShell> {
       children: [
         Positioned.fill(
           child: IndexedStack(index: _selectedIndex, children: _screens),
+        ),
+        Positioned(
+          left: 20,
+          right: 20,
+          bottom: 92,
+          child: Consumer<CartController>(
+            builder:
+                (context, cart, _) =>
+                    cart.isEmpty
+                        ? const SizedBox.shrink()
+                        : FilledButton.icon(
+                          onPressed: _openCart,
+                          icon: const BasilIcon(
+                            'shopping-bag-solid',
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'View cart · ${cart.itemCount} item${cart.itemCount == 1 ? '' : 's'}',
+                          ),
+                        ),
+          ),
         ),
         Positioned(
           left: 12,
@@ -75,6 +124,7 @@ class _BottomNavigation extends StatelessWidget {
     required this.selectedIndex,
     required this.onSelected,
   });
+
   final int selectedIndex;
   final ValueChanged<int> onSelected;
 

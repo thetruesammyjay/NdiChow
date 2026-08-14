@@ -6,9 +6,14 @@ import '../../../shared/widgets/restaurant_card.dart';
 import '../../home/data/home_repository.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key, required this.repository});
+  const SearchScreen({
+    super.key,
+    required this.repository,
+    required this.onRestaurantTap,
+  });
 
   final HomeRepository repository;
+  final ValueChanged<String> onRestaurantTap;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -70,7 +75,12 @@ class _SearchScreenState extends State<SearchScreen> {
               }
               return Column(
                 children: restaurants
-                    .map((restaurant) => RestaurantCard(restaurant: restaurant))
+                    .map(
+                      (restaurant) => RestaurantCard(
+                        restaurant: restaurant,
+                        onTap: () => widget.onRestaurantTap(restaurant.id),
+                      ),
+                    )
                     .toList(growable: false),
               );
             },

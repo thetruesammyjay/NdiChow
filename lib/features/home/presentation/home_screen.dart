@@ -14,11 +14,13 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.repository,
     required this.onSearchTap,
+    required this.onRestaurantTap,
     this.loadingBuilder,
   });
 
   final HomeRepository repository;
   final VoidCallback onSearchTap;
+  final ValueChanged<String> onRestaurantTap;
   final WidgetBuilder? loadingBuilder;
 
   @override
@@ -39,9 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
-          setState(
-            () => _restaurants = widget.repository.getNearbyRestaurants(),
-          );
+          setState(() {
+            _restaurants = widget.repository.getNearbyRestaurants();
+          });
           await _restaurants;
         },
         child: CustomScrollView(
@@ -171,12 +173,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(height: 12),
                           FilledButton(
                             onPressed:
-                                () => setState(
-                                  () =>
-                                      _restaurants =
-                                          widget.repository
-                                              .getNearbyRestaurants(),
-                                ),
+                                () => setState(() {
+                                  _restaurants =
+                                      widget.repository.getNearbyRestaurants();
+                                }),
                             child: const Text('Try again'),
                           ),
                         ],
@@ -188,9 +188,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
                   sliver: SliverList.builder(
                     itemCount: snapshot.data!.length,
-                    itemBuilder:
-                        (_, index) =>
-                            RestaurantCard(restaurant: snapshot.data![index]),
+                    itemBuilder: (_, index) {
+                      final restaurant = snapshot.data![index];
+                      return RestaurantCard(
+                        restaurant: restaurant,
+                        onTap: () => widget.onRestaurantTap(restaurant.id),
+                      );
+                    },
                   ),
                 );
               },
