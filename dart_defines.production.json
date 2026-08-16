@@ -1,0 +1,4 @@
+{
+  "APP_ENV": "production",
+  "API_BASE_URL": "https://ndichow-backend.onrender.com/api/v1"
+}
