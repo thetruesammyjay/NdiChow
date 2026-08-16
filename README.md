@@ -6,6 +6,8 @@
 
 NdiChow is the Flutter customer app for discovering restaurants and ordering food. It keeps the existing bright coral design language, custom PP Neue Machina typography, offline Basil icons, and Lottie/Rive animation support while connecting discovery to the NdiChow API.
 
+[Download NdiChow v0.1.0 for Android (.apk)](https://github.com/thetruesammyjay/NdiChow/releases/download/v0.1.0/NdiChow-v0.1.0.apk)
+
 The TypeScript API is maintained separately in [NdiChow-backend](https://github.com/thetruesammyjay/NdiChow-backend).
 
 ## Current capabilities
@@ -60,10 +62,10 @@ Local cleartext traffic is allowed only by Android debug resources and iOS debug
 
 ## Build-time configuration
 
-| Define | Default | Purpose |
-| --- | --- | --- |
+| Define         | Default                       | Purpose                    |
+| -------------- | ----------------------------- | -------------------------- |
 | `API_BASE_URL` | `http://10.0.2.2:4000/api/v1` | Versioned backend base URL |
-| `APP_ENV` | `development` | Environment label |
+| `APP_ENV`      | `development`                 | Environment label          |
 
 Flutter defines are compiled into the application and are not secrets. Never put database URLs, payment secret keys, signing credentials, or server credentials in this repository or configuration file.
 
