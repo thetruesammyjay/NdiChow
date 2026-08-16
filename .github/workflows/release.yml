@@ -1,0 +1,98 @@
+name: Android Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build signed Android release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Configure Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Restore signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          printf '%s' "$KEYSTORE_BASE64" \
+            | base64 --decode \
+            > android/app/ndichow-upload-key.jks
+
+      - name: Configure release signing
+        env:
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          printf '%s\n' \
+            "flutter.sdk=$FLUTTER_ROOT" \
+            "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS" \
+            "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD" \
+            "MYAPP_UPLOAD_STORE_FILE=ndichow-upload-key.jks" \
+            "MYAPP_UPLOAD_STORE_PASSWORD=$STORE_PASSWORD" \
+            > android/local.properties
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build signed APK
+        run: >-
+          flutter build apk
+          --release
+          --dart-define-from-file=dart_defines.production.json
+
+      - name: Build signed app bundle
+        run: >-
+          flutter build appbundle
+          --release
+          --dart-define-from-file=dart_defines.production.json
+
+      - name: Prepare release files
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk \
+            "NdiChow-${GITHUB_REF_NAME}.apk"
+          cp build/app/outputs/bundle/release/app-release.aab \
+            "NdiChow-${GITHUB_REF_NAME}.aab"
+          sha256sum \
+            "NdiChow-${GITHUB_REF_NAME}.apk" \
+            "NdiChow-${GITHUB_REF_NAME}.aab" \
+            > SHA256SUMS.txt
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "NdiChow-${GITHUB_REF_NAME}.apk" \
+            "NdiChow-${GITHUB_REF_NAME}.aab" \
+            SHA256SUMS.txt \
+            --title "NdiChow $GITHUB_REF_NAME" \
+            --generate-notes
