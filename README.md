@@ -156,6 +156,7 @@ GitHub Actions runs dependency resolution, formatting checks, static analysis, a
 - Session tokens are stored with `flutter_secure_storage` and cleared after logout or a `401` response.
 - Android application backups are disabled so encrypted session state cannot be restored without its key material.
 - Treat every value embedded in the app as public.
+- Verify payments and webhook signatures only on the backend.
 - Never calculate authoritative order totals on the device.
 - Require HTTPS in staging and production.
 - Do not log tokens, addresses, or payment details.
