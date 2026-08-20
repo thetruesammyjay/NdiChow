@@ -26,7 +26,7 @@ The TypeScript API is maintained separately in [NdiChow-backend](https://github.
 - Debug-only local HTTP access; HTTPS enforced for release API configuration
 - CI formatting, analysis, and widget tests
 
-Payments, saved addresses, delivery-zone eligibility, push notifications, and realtime tracking require the next backend phase.
+Payments and saved addresses, delivery-zone eligibility, push notifications, and realtime tracking require the next backend phase.
 
 ## Requirements
 
